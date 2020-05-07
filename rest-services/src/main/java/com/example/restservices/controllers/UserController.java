@@ -1,6 +1,6 @@
 package com.example.restservices.controllers;
 
-import com.example.restservices.config.UserNotFoundException;
+import com.example.restservices.exception.UserNotFoundException;
 import com.example.restservices.models.User;
 import com.example.restservices.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
