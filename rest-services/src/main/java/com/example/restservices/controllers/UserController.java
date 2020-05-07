@@ -1,5 +1,6 @@
 package com.example.restservices.controllers;
 
+import com.example.restservices.config.UserNotFoundException;
 import com.example.restservices.models.User;
 import com.example.restservices.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,11 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User retrieveUser(@PathVariable int id) {
-        return userService.findOne(id);
-
+     User user= userService.findOne(id);
+     if (user==null){
+         throw new UserNotFoundException("id- "+id);
+     }
+return user;
 
     }
 
