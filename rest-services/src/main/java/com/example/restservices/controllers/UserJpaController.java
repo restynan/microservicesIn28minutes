@@ -25,8 +25,7 @@ public class UserJpaController {
   private UserRepository userRepository;
 
 
-  @Autowired
-    private UserService userService;
+
 
     @GetMapping
 
@@ -75,7 +74,7 @@ public class UserJpaController {
     @ApiOperation(value = "Create new user",notes="provide user  details",response = User.class)
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
 
-        User savedUser = userService.save(user);
+        User savedUser = userRepository.save(user);
 
         //returning response 201 and providing a link in the headers for the newly created user
         URI location = ServletUriComponentsBuilder
@@ -91,11 +90,14 @@ public class UserJpaController {
     @ApiOperation(value = "Delete user by id ",notes="provide an id to delete a specific user ",response = User.class)
     public void  deleteUser(@ApiParam(value="Id value for the user you want to delete",required = true)
                             @PathVariable int id) {
+        Optional<User> user = userRepository.findById(id);
 
-        User user= userService.deleteById(id);
-        if (user==null){
+      if (!user.isPresent()){
             throw new UserNotFoundException("id- "+id);
         }
+
+        //deleteById  doesnot return any thing
+        userRepository.deleteById(id);
 
 
     }

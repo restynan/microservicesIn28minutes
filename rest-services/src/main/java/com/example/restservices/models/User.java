@@ -26,7 +26,7 @@ public class User {
 
     public User(){}
 
-    public User(int id, String name, Date birthDate) {
+    public User(Integer id, String name, Date birthDate) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
