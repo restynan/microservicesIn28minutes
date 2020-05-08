@@ -32,9 +32,22 @@ public class filterController {
 
     }
     @GetMapping("/customers")
-    public List<Customer> retrieveCustomers(){
-        return new ArrayList<>(Arrays.asList(new  Customer ("Dan","123",40000),
+    public MappingJacksonValue retrieveCustomers(){
+        List<Customer>list= new ArrayList<>(Arrays.asList(new  Customer ("Dan","123",40000),
                 new  Customer ("resty","123",70000)));
+
+        SimpleBeanPropertyFilter filter= SimpleBeanPropertyFilter.filterOutAllExcept("userName","password");
+
+        FilterProvider filters= new SimpleFilterProvider().addFilter("customerFilter",filter );
+
+        MappingJacksonValue mapping = new MappingJacksonValue(list);
+
+        mapping.setFilters(filters);
+
+        return mapping;
+
+
+
     }
 
 
