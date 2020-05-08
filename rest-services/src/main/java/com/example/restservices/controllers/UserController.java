@@ -6,10 +6,11 @@ import com.example.restservices.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.hateoas.EntityModel;
+
 import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -17,6 +18,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+
+
 
 @RestController
 @RequestMapping("/users")
@@ -35,14 +38,16 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     @ApiOperation(value = "Find user by id ",notes="provide an id to look up specific user information",response = User.class)
-    public EntityModel<User> retrieveUser(@ApiParam(value="Id value for the user you need to retrieve",required = true)
+    public EntityModel<User>retrieveUser(@ApiParam(value="Id value for the user you need to retrieve",required = true)
                                               @PathVariable int id) {
      User user= userService.findOne(id);
      if (user==null){
          throw new UserNotFoundException("id- "+id);
      }
 
-     //using heros to add link for retrieve all users link to the result
+    //using heros to add link for retrieve all users link to the result
+
+        //return type EntityModel<User>
         EntityModel<User> model = new EntityModel<>(user);
 
         WebMvcLinkBuilder linkTo = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).retrieveAllUsers());
@@ -50,6 +55,16 @@ public class UserController {
         model.add(linkTo.withRel("all-users"));
 
         return model;
+
+      /*
+      springboot release 2.1.3
+      Resource<User> resource = new Resource<User>(user);
+
+        ControllerLinkBuilder linkTo =ControllerLinkBuilder.linkTo(methodOn(this.getClass()).retrieveAllUsers());
+
+        resource.add(linkTo.withRel("all-users"));
+
+        return resource;*/
 
 
     }
