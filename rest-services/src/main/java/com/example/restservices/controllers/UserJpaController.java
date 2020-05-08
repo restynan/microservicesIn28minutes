@@ -1,7 +1,9 @@
 package com.example.restservices.controllers;
 
 import com.example.restservices.exception.UserNotFoundException;
+import com.example.restservices.models.Post;
 import com.example.restservices.models.User;
+import com.example.restservices.repository.PostRepository;
 import com.example.restservices.repository.UserRepository;
 import com.example.restservices.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -23,7 +25,8 @@ import java.util.Optional;
 public class UserJpaController {
   @Autowired
   private UserRepository userRepository;
-
+    @Autowired
+    private PostRepository postRepository;
 
 
 
@@ -101,4 +104,62 @@ public class UserJpaController {
 
 
     }
+
+
+    @GetMapping("/user/{id}/posts")
+    @ApiOperation(value = "Find user posts by id ",notes="provide an id to look up his posts",response = Post.class)
+    public List<Post> retrieveUserPosts(@ApiParam(value="Id value for the user whose posts you want to retrieve",required = true)
+                                          @PathVariable int id) {
+        Optional<User> userOptional= userRepository.findById(id);
+        if (!userOptional.isPresent()){
+            throw new UserNotFoundException("id- "+id);
+        }
+ return userOptional.get().getPosts();
+
+    }
+
+
+
+
+    @PostMapping("/user/{id}/post")
+    @ApiOperation(value = "Create new Post",notes="provide post  details")
+    public ResponseEntity<User> createUser(@Valid @RequestBody Post post ,@PathVariable int id) {
+
+        Optional<User> userOptional= userRepository.findById(id);
+
+        if (!userOptional.isPresent()){
+            throw new UserNotFoundException("id- "+id);
+        }
+
+        User user=userOptional.get();
+        post.setUser(user);
+        postRepository.save(post);
+
+
+
+
+
+
+
+
+
+
+        //returning response 201 and providing a link in the headers for the newly created user
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(post.getId()).toUri();
+        return ResponseEntity.created(location).build();
+
+    }
+
+
+
+
+
+
+
+
+
+
 }
