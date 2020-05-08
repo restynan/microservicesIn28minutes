@@ -34,10 +34,10 @@ public class UserController {
          throw new UserNotFoundException("id- "+id);
      }
 
-     //using heros to add link for retrieve all users link
+     //using heros to add link for retrieve all users link to the result
         EntityModel<User> model = new EntityModel<>(user);
 
-        WebMvcLinkBuilder linkTo = WebMvcLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(this.getClass()).retrieveAllUsers());
+        WebMvcLinkBuilder linkTo = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).retrieveAllUsers());
 
         model.add(linkTo.withRel("all-users"));
 
