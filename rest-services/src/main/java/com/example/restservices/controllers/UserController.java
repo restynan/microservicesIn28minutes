@@ -72,7 +72,7 @@ public class UserController {
 
     @DeleteMapping("user/{id}")
     @ApiOperation(value = "Delete user by id ",notes="provide an id to delete a specific user ",response = User.class)
-    public void  deleteUser(@ApiParam(value="Id value for the user you need to delete",required = true)
+    public void  deleteUser(@ApiParam(value="Id value for the user you want to delete",required = true)
                                 @PathVariable int id) {
 
         User user= userService.deleteById(id);
