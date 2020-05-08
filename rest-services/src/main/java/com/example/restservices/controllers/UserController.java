@@ -3,6 +3,8 @@ package com.example.restservices.controllers;
 import com.example.restservices.exception.UserNotFoundException;
 import com.example.restservices.models.User;
 import com.example.restservices.service.UserService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.hateoas.EntityModel;
@@ -23,12 +25,18 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
+
+    @ApiOperation(value = "Retrieve All users ")
     public List<User> retrieveAllUsers() {
         return userService.findAll();
     }
 
-    @GetMapping("/{id}")
-    public EntityModel<User> retrieveUser(@PathVariable int id) {
+
+
+    @GetMapping("/user/{id}")
+    @ApiOperation(value = "Find user by id ",notes="provide an id to look up specific user information",response = User.class)
+    public EntityModel<User> retrieveUser(@ApiParam(value="Id value for the user you need to retrieve",required = true)
+                                              @PathVariable int id) {
      User user= userService.findOne(id);
      if (user==null){
          throw new UserNotFoundException("id- "+id);
@@ -46,9 +54,12 @@ public class UserController {
 
     }
 
-    @PostMapping
+    @PostMapping("/user")
+    @ApiOperation(value = "Create new user",notes="provide user  details",response = User.class)
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+
         User savedUser = userService.save(user);
+
         //returning response 201 and providing a link in the headers for the newly created user
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -59,8 +70,11 @@ public class UserController {
     }
 
 
-    @DeleteMapping("/{id}")
-    public void  deleteUser(@PathVariable int id) {
+    @DeleteMapping("user/{id}")
+    @ApiOperation(value = "Delete user by id ",notes="provide an id to delete a specific user ",response = User.class)
+    public void  deleteUser(@ApiParam(value="Id value for the user you need to delete",required = true)
+                                @PathVariable int id) {
+
         User user= userService.deleteById(id);
         if (user==null){
             throw new UserNotFoundException("id- "+id);

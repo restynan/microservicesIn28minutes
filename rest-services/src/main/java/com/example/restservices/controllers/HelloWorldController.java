@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Locale;
 
 @RestController
-
+@RequestMapping("/api")
 public class HelloWorldController {
     @Autowired
     MessageSource messageSource;
